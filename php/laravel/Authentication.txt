@@ -1,0 +1,36 @@
+কেস স্টার্ডি
+
+০১. অথেনটিকেশন হলো সিস্টেমের নিরাপত্তা নিশ্চিত করণের জন্য অপরিহার্য বিষয়:
+এনভায়রনমেন্ট ও কনফিগারেশন:
+- APP_DEBUG=falase অন্যথায় ডিবাগ উইন্ডোতে এরর পেজে গুরুত্বপূর্ন তথ্য চলে আসবে।
+- APP_ENV=production
+- Generate App Key php artisan key:generate
+- Config Cache php artisan config:cache
+
+০২. সার্ভার সিকিউরিটি
+- HTTPS (SSL) - অবশ্যই সার্টিফিকেট ইনস্টল করতে হবে।
+- Secure Cookies: config/session.php এ 'secure' => true এবং 'http_only' => true নিশ্চিত করুন।
+- Directory Permissions: লারাভেলের storage এবং bootstrap/cache ফোল্ডার ছাড়া অন্য কোথাও রাইট পারমিশন দেবেন না। 755 (folders) এবং 644 (files) স্ট্যান্ডার্ড। chmod
+
+০৩. ডাটাবেজ ও ইউজার ইনপুট (Database & Input)
+- Mass Assignment Protection: মডেলগুলোতে $fillable অথবা $guarded প্রপার্টি সঠিকভাবে ব্যবহার করুন।
+- Validation: কখনো ইউজার ইনপুটকে অন্ধভাবে বিশ্বাস করবেন না। সবসময় FormRequest বা Validator ব্যবহার করুন।
+- SQL Injection: লারাভেলের Query Builder এবং Eloquent সাধারণত SQL Injection থেকে রক্ষা করে, কিন্তু DB::raw() ব্যবহারের সময় অত্যন্ত সতর্ক থাকুন।
+
+৪. অথেন্টিকেশন ও অথোরাইজেশন (Auth & Gate)
+কার কী দেখার অনুমতি আছে তা নিশ্চিত করা।
+
+- Rate Limiting: ব্রুট ফোর্স অ্যাটাক ঠেকাতে ThrottleRequests মিডলওয়্যার ব্যবহার করুন (যেমন: লগইন পেজে)।
+- Password Hashing: লারাভেলের ডিফল্ট Bcrypt বা Argon2 ব্যবহার করুন।
+- Policies and Gates: শুধু লগইন করলেই হবে না, ইউজারের ওই ডেটা দেখার অধিকার আছে কি না তা Gate বা Policy দিয়ে চেক করুন।
+
+৫. ফাইল আপলোড ও অন্যান্য (Files & Others)
+    -MIME Type Validation: আপলোড করা ফাইলগুলো শুধু ইমেজ বা নির্দিষ্ট ফরম্যাট কি না তা চেক করুন।
+    -Hidden Files: .env, .git, এবং storage এর সেনসিটিভ ফাইলগুলো যাতে পাবলিকলি অ্যাক্সেস করা না যায় তা নিশ্চিত করুন      (Nginx/Apache কনফিগারেশন)।
+    -Security Headers: Content-Security-Policy (CSP), X-Frame-Options, এবং X-Content-Type-Options এর মতো      সিকিউরিটি হেডারগুলো যুক্ত করুন।
+
+Dependency Update: নিয়মিত composer update দিয়ে আপনার প্যাকেজগুলো লেটেস্ট ভার্সনে রাখুন যাতে কোনো পরিচিত বাগ বা সিকিউরিটি হোল না থাকে।
+
+
+
+

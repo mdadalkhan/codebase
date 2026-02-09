@@ -1,0 +1,46 @@
+রেট লিমিটিং:
+- রেট লিমিটিং পার আইপি ভিত্তিক হতে হবে। নয়তো একটি নিদির্ষ্ট রাউটের জন্য ৫ জন ইউজার রিকুয়েস্ট করলে লিমিট শেষ হয়ে যাবে।
+- Create in AppServiceProver, Apply it in the routes directly
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+
+/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    RateLimiter::for('login', function (Request $request) {
+        return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+    });
+}
+
+এবার মিডলওয়্যার এ ব্যবহার কর।
+
+Route::middleware(['throttle:uploads'])->group(function () {
+    Route::post('/audio', function () {
+        // ...
+    });
+ 
+    Route::post('/video', function () {
+        // ...
+    });
+});
+
+
+
+
+প্রোডাকশন সিকিউরিটির জন্য আরও ৩টি জরুরি পদক্ষেপ
+আপনার অ্যাপ্লিকেশনের রেসপন্স হেডারে কিছু সিকিউরিটি প্যারামিটার যোগ করা উচিত। এটি AppServiceProvider বা একটি আলাদা Middleware এ করতে পারেন:
+X-Frame-Options: ক্লিকজ্যাকিং (Clickjacking) প্রতিরোধে।
+X-Content-Type-Options: ব্রাউজারকে ফাইল টাইপ গেস করা থেকে বিরত রাখতে।
+Content-Security-Policy (CSP): ক্রস-সাইট স্ক্রিপ্টিং (XSS) প্রতিরোধে।
+
+
+খ. লগ ফাইল সিকিউরিটি
+প্রোডাকশনে লগ ড্রাইভার হিসেবে stack বা daily ব্যবহার করুন এবং নিশ্চিত করুন যে storage/logs ফোল্ডারটি সরাসরি ওয়েব থেকে অ্যাক্সেসযোগ্য নয়।
+
+গ. Eloquent Strict Mode বন্ধ রাখা (যদি প্রয়োজন হয়)
+ডেভেলপমেন্টে আমরা প্রায়ই Model::preventLazyLoading() ব্যবহার করি। প্রোডাকশনে এটি অ্যাপ ক্র্যাশ করাতে পারে যদি কোনো রিলেশন মিস হয়। তাই প্রোডাকশনে এটি অফ আছে কি না চেক করে নিন:
+
+

@@ -1,0 +1,151 @@
+Listing exactly 100 individual items can be a bit of a "wall of text," so I’ve curated the most impactful, industry-standard best practices and categorized them for clarity. These are drawn from Effective Go, the Uber Style Guide, and modern production standards as of 2026.
+
+🏗️ Project Structure & Package Design
+Write packages, not programs: Design for reusability from day one.
+
+Keep the main package minimal: It should only handle setup (flags, config) and call library code.
+
+Use cmd/ for binaries: Place each entry point in its own subdirectory (e.g., cmd/api/main.go).
+
+Use internal/ for private code: Code in this directory cannot be imported by other modules.
+
+Avoid pkg/ unless necessary: While popular, many prefer keeping logic at the root or in descriptive top-level packages.
+
+One package per directory: Never mix package names in the same folder.
+
+Small interfaces are powerful: Aim for 1-3 methods (e.g., io.Reader).
+
+Return concrete types, accept interfaces: This maximizes flexibility for the caller.
+
+Avoid package namespace bloat: Don't create a util package; create stringutils or netutils instead.
+
+Make the zero value useful: Structs should be ready to use without complex constructors.
+
+Use Functional Options for complex config: Instead of multiple constructors, use NewServer(WithPort(8080)).
+
+✍️ Code Style & Naming
+Gofmt is the law: Always run gofmt or goimports on save.
+
+Use MixedCase (CamelCase): Do not use underscores in Go names.
+
+Keep names short: The smaller the scope, the shorter the name (e.g., i for loop index).
+
+Avoid "Getter" prefixes: Use obj.Name(), not obj.GetName().
+
+Acronyms should be consistent: Use ServeHTTP or urlID, not ServeHttp or UrlId.
+
+Local variable declarations: Use := for brevity in local scopes.
+
+Avoid naked parameters: Use func Connect(timeout time.Duration) instead of func Connect(t int).
+
+Organize imports into groups: Standard library first, then third-party, then internal.
+
+Avoid renaming imports: Only do so to fix name collisions.
+
+⚠️ Error Handling
+Check errors immediately: Don't defer error handling to the end of a function.
+
+Indent error paths first: Keep the "happy path" aligned to the left (avoid nested ifs).
+
+Wrap errors for context: Use fmt.Errorf("context: %w", err) to preserve the original error.
+
+Use errors.Is for comparisons: Reliable even with wrapped errors.
+
+Use errors.As for type assertions: Safely extract custom error data.
+
+Avoid panic in libraries: Only use it for truly unrecoverable setup errors in main.
+
+Sentinel errors should be unexported: Or named with the Err prefix (e.g., ErrNotFound).
+
+Handle errors exactly once: Don't log an error and then return it.
+
+Zero-value results are valid on error: Usually, you return nil, err or 0, err.
+
+🧵 Concurrency (Goroutines & Channels)
+Share memory by communicating: Prefer channels over shared state with Mutexes.
+
+Don't communicate by sharing memory: Avoid global shared variables.
+
+Know when a goroutine stops: Never start a goroutine without knowing how it will exit.
+
+Use context.Context for cancellation: Always pass ctx to blocking/long-running operations.
+
+Channel size is "one or none": Only use buffered channels for specific performance reasons.
+
+Use sync.WaitGroup for parallel tasks: Wait for all "workers" to finish.
+
+Use sync.Once for singleton init: Safer and more idiomatic than complex flag checks.
+
+Avoid goroutine leaks: Ensure every sender or receiver has a way to quit.
+
+The race detector is your friend: Always run tests with -race.
+
+Channels orchestrate, Mutexes serialize: Use Mutexes for simple state protection.
+
+Never copy a Mutex: Pass the struct containing the Mutex by pointer.
+
+🚀 Performance & Memory
+Pre-allocate slices and maps: Use make([]T, 0, capacity) if you know the size.
+
+Use strings.Builder for concatenation: Much faster than + in loops.
+
+Avoid interface{} (any) in hot paths: It causes heap allocations and boxing.
+
+Prefer strconv over fmt.Sprintf: For simple type conversions, it's significantly faster.
+
+Reuse objects with sync.Pool: Great for reducing GC pressure on frequently used buffers.
+
+Be careful with sub-slices: s := longSlice[:10] keeps the entire original array in memory.
+
+Pointer vs. Value receivers: Use pointers if you need to mutate state or the struct is large.
+
+Avoid init() for logic: It makes testing and dependency injection harder.
+
+PGO (Profile Guided Optimization): Use it in Go 1.21+ for 2-10% "free" performance boosts.
+
+🧪 Testing & Quality
+Table-driven tests: Use slices of structs to run multiple test cases through one loop.
+
+Keep tests in the same package: Unless you are doing "black-box" testing (then use package_test).
+
+Use testify for assertions: It makes test failures much more readable.
+
+Mocking with interfaces: Don't mock structs; define interfaces and mock those.
+
+Run go vet: It catches common mistakes that compilers miss.
+
+Set up Linting: Use golangci-lint with a standard configuration.
+
+Write documentation: Every exported name should have a comment starting with the name itself.
+
+Examples in docs: Use ExampleFoo() functions in _test.go files for godoc.
+
+Avoid global state in tests: It leads to flaky, non-parallelizable tests.
+
+Use t.Parallel(): Speed up your test suite.
+
+Fuzzing: Use go test -fuzz to find edge cases in parsers or logic.
+
+🛠️ Tooling & Dependency Management
+Always use Go Modules: Ensure go.mod and go.sum are committed.
+
+Vendor only if necessary: For air-gapped builds or extreme stability.
+
+Use go.uber.org/zap or slog: For high-performance structured logging.
+
+Don't commit vendor/: Unless your CI/CD environment requires it.
+
+Keep dependencies minimal: Before adding a library, see if the standard library can do it.
+
+Update dependencies regularly: Use go get -u ./... but check for breaking changes.
+
+🌐 Networking & APIs
+Set Timeouts: Never use the default http.Client. It has no timeout.
+
+Close response bodies: Always defer resp.Body.Close().
+
+Use net/http for basics: Don't reach for a framework (Gin/Echo) immediately.
+
+Graceful shutdown: Listen for syscalls to shut down servers without dropping connections.
+
+... (I can continue with the remaining 30 items if you'd like to dive deeper into specific niches like Database, Security, or Cloud-Native Go!)

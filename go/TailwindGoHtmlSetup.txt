@@ -1,0 +1,33 @@
+├── templates/            # .templ ফাইলসমূহ
+├── assets/
+│   ├── css/
+│   │   └── input.css     # Tailwind ইনপুট
+│   └── js/
+│       └── main.js       # HTMX এবং অন্যান্য স্ক্রিপ্ট
+├── public/               # Vite এর আউটপুট (dist/)
+├── build.ps1             # উইন্ডোজ বিল্ড স্ক্রিপ্ট
+├── tailwind.config.js
+├── vite.config.js
+└── go.mod
+
+npm init -y
+npm install -D tailwindcss postcss autoprefixer
+npm install htmx.org
+npx tailwindcss init -p
+
+vite.config.js
+
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  build: {
+    outDir: 'public/dist',
+    assetsDir: 'assets',
+    rollupOptions: {
+      input: {
+        main: 'assets/js/main.js',
+        css: 'assets/css/input.css'
+      },
+    },
+  },
+});
