@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Go WebAssembly</title>
+    <script src="wasm_exec.js"></script>
+</head>
+<body>
+    <h1 id="status">Loading Go...</h1>
+    
+    <script>
+        // 1. Initialize the Go runner
+        const go = new Go();
+
+        // 2. Load the .wasm binary
+        WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
+            .then((result) => {
+                // 3. Run the Go program
+                go.run(result.instance);
+                document.getElementById("status").innerText = "Go is running!";
+            })
+            .catch((err) => {
+                console.error("Error loading Wasm:", err);
+            });
+    </script>
+</body>
+</html>
