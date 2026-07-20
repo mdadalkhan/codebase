@@ -11,7 +11,7 @@
 /**
  * Installation (Server)
  * 01.composer require inertiajs/inertia-laravel
- * 02. Create App.js and App.blade.php 
+ * 02. Create App.js and App.blade.php
  * 03. php artisan inertia:middleware
  * 04. Edit app/bootstrap file
  * 05. Create Response
@@ -32,13 +32,12 @@
  * 02. all Inertia request must include X-Inertia=true to prevent reloading
  * 03. It also maintain a version key.
  * 04. Request Headers
- * 05. Response Headers  
+ * 05. Response Headers
  * 06. Page Object {}
- *   
+ *
  * */
 
 /**
- * 
- * 
+ *
+ *
  * */
-
