@@ -1,2 +1,0 @@
-install dotnet sdk with winget. download it from official website of microsoft
-use commandline to compile c# project
