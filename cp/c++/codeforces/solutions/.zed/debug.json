@@ -1,0 +1,13 @@
+[
+  {
+    "label": "C++ Debug",
+    "name": "C++ Debug",
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "program": "main.exe",
+    "args": ["< input"],
+    "cwd": "",
+    "stopOnEntry": false,
+    "build": "C++ Debug"
+  }
+]

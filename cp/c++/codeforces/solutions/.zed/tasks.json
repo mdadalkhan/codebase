@@ -1,0 +1,44 @@
+/**
+   Author: Adal Khan, mdadalkhan@gmail.com
+  */
+[
+  {
+    "label": "C++",
+    "command": "powershell.exe",
+    "args": [
+      "-NoProfile",
+      "-Command",
+      "clang++ -g -O2 -std=c++20 -Wall -Wextra -Wshadow -DLOCAL main.cc -o main.exe; if ($?) { Clear-Host; .\\main.exe }"
+    ],
+    "show_summary": false,
+    "show_command": false,
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false
+  },
+  {
+    "label": "C++ Input",
+    "command": "powershell.exe",
+    "args": [
+      "-NoProfile",
+      "-Command",
+      "clang++ -g -O2 -std=c++20 -Wall -Wextra -Wshadow -DLOCAL main.cc -o main.exe; if ($?) { Clear-Host; Get-Content input | .\\main.exe }"
+    ],
+    "show_summary": false,
+    "show_command": false,
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false
+  },
+  {
+      "label": "C++ Debug",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "clang++ -g3 -O0 -std=c++20 -Wall -Wextra -Wshadow -DLOCAL main.cc -o main.exe"
+      ],
+      "show_summary": false,
+      "show_command": false,
+      "use_new_terminal": false,
+      "allow_concurrent_runs": false
+    }
+]
